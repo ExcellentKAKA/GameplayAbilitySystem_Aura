@@ -7,7 +7,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fc8da628-3afe-4f5c-80c7-64d58cced7ca" name="Changes" comment="" />
+    <list default="true" id="fc8da628-3afe-4f5c-80c7-64d58cced7ca" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Aura/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Aura/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BluePrint/Aura/BP_Aura.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/BluePrint/Globlin_Spear/BP_Globlin_Spear.uasset" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -113,7 +117,9 @@
       <workItem from="1710164430188" duration="2645000" />
       <workItem from="1710211142331" duration="1089000" />
       <workItem from="1710212281318" duration="839000" />
-      <workItem from="1710295655877" duration="820000" />
+      <workItem from="1710295655877" duration="2982000" />
+      <workItem from="1710301808111" duration="442000" />
+      <workItem from="1710303373315" duration="1486000" />
     </task>
     <servers />
   </component>
