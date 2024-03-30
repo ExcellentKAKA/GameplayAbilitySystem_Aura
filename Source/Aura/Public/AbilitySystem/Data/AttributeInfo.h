@@ -25,7 +25,7 @@ struct FAuraAttributeInfo
 	float AttributeValue = 0.f;
 };
 /**
- * 
+ * 此类的作用是封装AttributeInfo结构体,并创建该结构体的数组在蓝图中初始化，供其他类使用
  */
 UCLASS()
 class AURA_API UAttributeInfo : public UDataAsset

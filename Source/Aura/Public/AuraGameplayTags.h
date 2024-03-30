@@ -8,6 +8,7 @@
  * AuraGameplayTags
  *
  * Singleton containing native Gameplay Tags   单例类的使用方法
+ * 在此类中添加所有的Tag,并使得其他类可通过此单例类来访问所有Tag
  */
 struct FAuraGameplayTags
 {

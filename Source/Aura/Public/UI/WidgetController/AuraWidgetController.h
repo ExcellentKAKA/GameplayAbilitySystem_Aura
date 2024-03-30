@@ -10,7 +10,7 @@ class UAttributeSet;
 class UAbilitySystemComponent;
 
 
-
+//此结构体用来初始化UAuraWidgetController及子类
 USTRUCT(BlueprintType)
 struct FWidgetControllerParams
 {
