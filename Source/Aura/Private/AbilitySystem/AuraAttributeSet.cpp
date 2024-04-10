@@ -7,7 +7,10 @@
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "AuraGameplayTags.h"
+#include "Interaction/CombatInterface.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+#include "Player/AuraPlayerController.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -112,6 +115,7 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 	}
 }
 
+
 void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -143,7 +147,16 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 
 			const bool bFatal = NewHealth <= 0.f;
-			if(!bFatal)
+			if(bFatal)
+			{
+				ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
+				if(CombatInterface)
+				{
+					CombatInterface->Die();
+				}
+				
+			}
+			else
 			{
 				FGameplayTagContainer TagContainer;
 				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
@@ -151,9 +164,22 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				//拥有此AttributeSet的ASC 此处这样写是为了解耦,不需要知道拥有该AttributeSet的Character
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 			}
+
+			ShowFloatingText(Props, LocalIncomingDamage);
 		}
 	}
 	
+}
+void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage) const
+{
+	if(Props.SourceCharacter != Props.TargetCharacter)
+	{
+		if(AAuraPlayerController* PC = Cast<AAuraPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+		{
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter);
+		}
+				
+	}
 }
 
 
