@@ -10,7 +10,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Aura/Aura.h"
+#include "Character/AuraCharacterBase.h"
 #include "Components/AudioComponent.h"
+#include "Player/AuraPlayerState.h"
+
 
 // Sets default values
 AAuraProjectile::AAuraProjectile()
@@ -43,32 +46,56 @@ void AAuraProjectile::BeginPlay()
 
 void AAuraProjectile::Destroyed()
 {
+	//服务端触发的Destroy本Actor比OnSphereOverlap先复制到客户端，所以要销毁前播放特效和声音
 	if(!bHit && !HasAuthority())
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		LoopingSoundComponent->Stop();
+		if(LoopingSoundComponent)
+		{
+			LoopingSoundComponent->Stop();
+		}
 	}
 	Super::Destroyed();
 }
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	LoopingSoundComponent->Stop();
-	if(HasAuthority())
+	//OnSphereOverlap比Destroy先复制到客户端
+	//DamageEffectSpecHandle只存在于服务器，客户端要进行检查
+	
+	if(DamageEffectSpecHandle.Data.IsValid() &&  DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
 	{
-		
-		if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
-		{
-			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
-		}
-		Destroy();
+		return;
 	}
-	else
+
+	AActor* CauserActor = Cast<AAuraPlayerState>(GetOwner())->GetPawn();
+	AAuraCharacterBase* OtherCharacter = Cast<AAuraCharacterBase>(OtherActor);
+	
+	if(OtherActor != CauserActor && OtherCharacter && Cast<ICombatInterface>(OtherCharacter))
 	{
-		bHit = true;
+		if(!bHit)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+			if(LoopingSoundComponent)
+			{
+				LoopingSoundComponent->Stop();
+			}
+		}
+	
+		if(HasAuthority())
+		{
+			if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+			{
+				TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+			}
+			Destroy();
+		}
+		else
+		{
+			bHit = true;
+		}
 	}
 }
 
