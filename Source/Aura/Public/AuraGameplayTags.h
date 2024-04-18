@@ -51,6 +51,8 @@ public:
 	FGameplayTag Damage_Arcane;    //奥数,神秘
 	FGameplayTag Damage_Physical;
 
+	FGameplayTag Abilities_Attack;
+
 	
 
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;

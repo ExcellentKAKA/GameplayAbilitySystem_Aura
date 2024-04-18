@@ -25,4 +25,11 @@ public:
 	//Pure virtual function
 	virtual void HighlightActor() = 0;
 	virtual void UnHighlightActor() = 0;
+
+	//TODO: 查一下BlueprintNativeEvent函数修饰符和另外一个的使用 这里为什么不用virtual，以及本项目中其他使用BlueprintNativeEvent修饰符的函数的使用
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetCombatTarget(AActor* InCombatTarget);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	AActor* GetCombatTarget() const;
 };

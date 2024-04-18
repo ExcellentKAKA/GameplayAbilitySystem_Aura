@@ -24,13 +24,10 @@ public:
 
 	AAuraCharacterBase();
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
-
-	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
-
-	virtual void Die() override;
+	
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
@@ -45,8 +42,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
 
-	virtual FVector GetCombatSocketLocation() const override;
+	/* Combat Interface*/
+	virtual void Die() override;
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	//返回武器尖端位置
+	virtual FVector GetCombatSocketLocation_Implementation() const override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation() override;
+	/* End Combat Interface*/
 
+	
 	UPROPERTY(VisibleAnywhere ,BlueprintReadOnly)
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
 
@@ -55,6 +60,8 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+	bool bDead = false;
 
 	virtual void InitAbilityActorInfo();
 
