@@ -31,6 +31,9 @@ public:
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TArray<FTaggedMontage> AttackMontages;
 protected:
 
 	virtual void BeginPlay() override;
@@ -42,13 +45,21 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName WeaponTipSocketName;
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName LeftHandSocketName;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName RightHandSocketName;
+
 	/* Combat Interface*/
 	virtual void Die() override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	//返回武器尖端位置
-	virtual FVector GetCombatSocketLocation_Implementation() const override;
+	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) const override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
+	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	
 	/* End Combat Interface*/
 
 	
