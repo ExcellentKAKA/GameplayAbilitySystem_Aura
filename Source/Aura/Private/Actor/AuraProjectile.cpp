@@ -9,8 +9,10 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Aura/Aura.h"
 #include "Character/AuraCharacterBase.h"
+#include "Character/AuraEnemy.h"
 #include "Components/AudioComponent.h"
 #include "Player/AuraPlayerState.h"
 
@@ -64,16 +66,18 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	//OnSphereOverlap比Destroy先复制到客户端
 	//DamageEffectSpecHandle只存在于服务器，客户端要进行检查
 	
-	if(DamageEffectSpecHandle.Data.IsValid() &&  DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
+	if(!DamageEffectSpecHandle.Data.IsValid() ||  DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
 	{
 		return;
 	}
-
-	AActor* CauserActor = Cast<AAuraPlayerState>(GetOwner())->GetPawn();
-	AAuraCharacterBase* OtherCharacter = Cast<AAuraCharacterBase>(OtherActor);
 	
-	if(OtherActor != CauserActor && OtherCharacter && Cast<ICombatInterface>(OtherCharacter))
+	//使得敌人之间不互相伤害
+	if(!UAuraAbilitySystemLibrary::IsNotFriend(DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor))
 	{
+		return;
+	}
+	
+
 		if(!bHit)
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
@@ -96,6 +100,6 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		{
 			bHit = true;
 		}
-	}
+
 }
 
