@@ -106,8 +106,8 @@ void AAuraEnemy::BeginPlay()
 		AuraUserWidget->SetWidgetController(this);
 	}
 
-	//TODO:CastChecked has bug
-	if(const UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AttributeSet))
+	//TODO: Fixed a bug. (CastChecked has bug Caused by duplicated Actor)
+	if(const UAuraAttributeSet* AuraAS = CastChecked<UAuraAttributeSet>(AttributeSet))
 	{
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAS->GetHealthAttribute()).AddLambda(
 			[this](const FOnAttributeChangeData& Data)
