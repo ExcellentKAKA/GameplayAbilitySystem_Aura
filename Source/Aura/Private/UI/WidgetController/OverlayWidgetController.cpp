@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -55,7 +56,21 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			}
 	);
 
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
+	if(UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		//需要考虑赋予Ability和绑定的先后执行问题，这是不确定的，如果没绑定委托就执行回调这是危险的
+		//如果检测到ASC中赋予能力的函数已经执行，说明还未绑定委托，所以直接执行回调。否则绑定委托等待赋予能力的执行
+		if(AuraASC->bStartupAbilitiesGiven)
+		{
+			OnInitializeStartupAbilities(AuraASC);
+		}
+		else
+		{
+			AuraASC->AbilitiesGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitializeStartupAbilities);
+		}
+		
+
+		AuraASC->EffectAssetTags.AddLambda(
 	[this](const FGameplayTagContainer& AssetTags)
 	{
 		for(const auto Tag : AssetTags)
@@ -72,10 +87,29 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 				MessageWidgetRowSignature.Broadcast(*Row);
 			}
 			
-			
 		}
 	}
 	);
+	}
+	
+}
+
+void UOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySystemComponent* AuraASC)
+{
+	//TODO Get information about all given abilities, look up their Ability Info, and broadcast it to widgets.
+	if(!AuraASC->bStartupAbilitiesGiven) return;
+
+	FForEachAbility BroadcastDelegate;
+	BroadcastDelegate.BindLambda(
+		[this, AuraASC](const FGameplayAbilitySpec& AbilitySpec)
+		{
+			//TODO need a way to figure out the ability tag for a given ability spec.
+			FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AuraASC->GetAbilityTagFromSpec(AbilitySpec));
+			Info.InputTag = AuraASC->GetInputTagFromSpec(AbilitySpec);
+			AbilityInfoDelegate.Broadcast(Info);
+		}
+	);
+	AuraASC->ForEachAbility(BroadcastDelegate);
 }
 
 
