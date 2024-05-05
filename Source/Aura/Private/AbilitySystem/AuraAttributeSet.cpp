@@ -91,7 +91,7 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 	
 }
-//TODO: check
+//通过 UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) 中的FGameplayEffectModCallbackData类型可解析到Target 和 Source的信息
 void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const
 {
 	Props.EffectContextHandle = Data.EffectSpec.GetContext();
@@ -137,17 +137,13 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	if(Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
-		UE_LOG(LogTemp, Warning, TEXT("Changed Health on %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetHealth());
+		//UE_LOG(LogTemp, Warning, TEXT("Changed Health on %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetHealth());
 	}
 	if(Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
-
-	// if(Data.EvaluatedData.Attribute == GetStrengthAttribute())
-	// {
-	// 	UE_LOG(LogTemp, Warning, TEXT("Changed Strength on %s, Health: %f"), *Props.TargetAvatarActor->GetName(), GetStrength());
-	// }
+	
 	//IncomingDamage并没有复制，所以以下代码只在服务器上执行
 	if(Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{

@@ -7,7 +7,9 @@
 #include "AuraAbilitySystemGlobals.generated.h"
 
 /**
- * 应用此Globals类要在 Config/Game.ini 中设置
+ *	本项目应用了自己的GameplayEffectContext(FGameplayEffectModCallbackData)
+ *	指明修改为自己的GameplayEffectContext类要Overrider下面的函数
+ *	而应用此Globals类要在 Config/Game.ini 中设置
  */
 UCLASS()
 class AURA_API UAuraAbilitySystemGlobals : public UAbilitySystemGlobals

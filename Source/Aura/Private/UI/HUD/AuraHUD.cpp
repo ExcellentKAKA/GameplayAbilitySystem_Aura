@@ -37,10 +37,13 @@ void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 	//check a condition and then print a formatted string
 	checkf(OverlayWidgetClass, TEXT("Overlay Widget Class uninitialized, please fill out BP_AuraHUD"));
 	checkf(OverlayWidgetControllerClass, TEXT("Overlay Widget Controler Class uninitialized, please fill out BP_AuraHUD"))
-	
+
+	//OverlayWidget
 	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), OverlayWidgetClass);
 	OverlayWidget = Cast<UAuraUserWidget>(Widget);
 	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
+
+	//这里采用的使单例，构造一个WidgetController,构造的过程中绑定一些回调
 	UOverlayWidgetController* WidgetController = GetOverlayController(WidgetControllerParams);
 
 	OverlayWidget->SetWidgetController(WidgetController);

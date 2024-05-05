@@ -9,11 +9,9 @@
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
-	//此委托只会在
+	/** Called on server whenever a GE is applied to self. This includes instant and duration based GEs. */
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UAuraAbilitySystemComponent::ClientEffectApplied);
 	
-	// const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
-	// GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("Tag: %s"), *GameplayTags.Attributes_Secondary_Armor.ToString()));
 }
 
 void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
