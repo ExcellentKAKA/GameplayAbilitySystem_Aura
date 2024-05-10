@@ -55,6 +55,8 @@ public:
 	FGameplayTag Damage_Arcane;    //奥数,神秘
 	FGameplayTag Damage_Physical;
 
+	FGameplayTag Abilities_None;
+	
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;
 	
