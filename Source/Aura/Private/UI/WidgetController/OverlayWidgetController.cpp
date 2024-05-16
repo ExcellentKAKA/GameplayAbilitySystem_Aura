@@ -3,8 +3,10 @@
 
 #include "UI/WidgetController/OverlayWidgetController.h"
 
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 
 #include "AbilitySystem/Data/LevelUpInfo.h"
 #include "Player/AuraPlayerState.h"
@@ -69,6 +71,8 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 
 	if(GetAuraASC())
 	{
+		GetAuraASC()->AbilityEquipped.AddUObject(this, &UOverlayWidgetController::OnAbilityEquipped);
+		
 		//需要考虑赋予Ability和绑定的先后执行问题，这是不确定的，如果没绑定委托就执行回调这是危险的
 		//如果检测到ASC中赋予能力的函数已经执行，说明还未绑定委托，所以直接执行回调。否则绑定委托等待赋予能力的执行
 		if(GetAuraASC()->bStartupAbilitiesGiven)
@@ -105,6 +109,26 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	
 }
 
+
+void UOverlayWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status,const FGameplayTag& Slot, const FGameplayTag& PrevSlot) const
+{
+	
+	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+	
+	FAuraAbilityInfo LastSlotInfo;
+	LastSlotInfo.StatusTag = GameplayTags.Abilities_Status_Unlocked;
+	LastSlotInfo.InputTag = PrevSlot;
+	LastSlotInfo.AbilityTag = GameplayTags.Abilities_None;
+	//Broadcast empty info if PreviousSlot is a valid slot. Only if equipping an already-equipped spell
+	AbilityInfoDelegate.Broadcast(LastSlotInfo);
+
+	FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
+	Info.StatusTag = Status;
+	Info.InputTag = Slot;
+	AbilityInfoDelegate.Broadcast(Info);
+
+	
+}
 
 void UOverlayWidgetController::OnXPChanged(int32 NewXP) 
 {

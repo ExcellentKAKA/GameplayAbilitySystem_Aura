@@ -79,7 +79,7 @@ protected:
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
 
 
-
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PrevSlot) const;
 
 	template<typename T>
 	T* GetDataTableByTag(UDataTable* DataTable, const FGameplayTag& Tag);
