@@ -173,6 +173,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	//在设置完OwnerActor和AvatarActor后便可以绑定当施加给ASC GE的委托
 	Cast<UAuraAbilitySystemComponent>(AuraPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
+	OnAscRegistered.Broadcast(AbilitySystemComponent);
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 
 	//在多人游戏中，客户端下的其他玩家的PlayerController是nullptr，所以要做以下检查.只在玩家本地控制的角色上创建UI
