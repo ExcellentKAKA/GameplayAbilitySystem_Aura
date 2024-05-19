@@ -33,7 +33,7 @@ public:
 	
 
 	UFUNCTION(NetMulticast, Reliable)
-	virtual void MulticastHandleDeath();
+	virtual void MulticastHandleDeath(const FVector& DeathImpulse);
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;
@@ -57,7 +57,7 @@ protected:
 	FName TailSocketName;
 
 	/* Combat Interface*/
-	virtual void Die() override;
+	virtual void Die(const FVector& DeathImpulse) override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	//返回武器尖端位置
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) const override;
