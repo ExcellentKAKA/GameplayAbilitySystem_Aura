@@ -47,6 +47,11 @@ void AAuraProjectile::BeginPlay()
 
 void AAuraProjectile::Destroyed()
 {
+	if(LoopingSoundComponent)
+	{
+		LoopingSoundComponent->Stop();
+		LoopingSoundComponent->DestroyComponent();
+	}
 	//服务端触发的Destroy本Actor比OnSphereOverlap先复制到客户端，所以要销毁前播放特效和声音
 	if(!bHit && !HasAuthority()) OnHit();
 	
@@ -60,6 +65,7 @@ void AAuraProjectile::OnHit()
 	if(LoopingSoundComponent)
 	{
 		LoopingSoundComponent->Stop();
+		LoopingSoundComponent->DestroyComponent();
 	}
 	bHit = true;
 }
