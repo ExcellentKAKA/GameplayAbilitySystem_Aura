@@ -8,7 +8,7 @@
 #include "Actor/AuraProjectile.h"
 #include "GameFramework/Pawn.h"
 #include "Interaction/CombatInterface.h"
-#include "Aura/Public/AuraGameplayTags.h"
+
 
 
 

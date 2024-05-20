@@ -11,10 +11,9 @@
 #include "NiagaraFunctionLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Aura/Aura.h"
-#include "Character/AuraCharacterBase.h"
-#include "Character/AuraEnemy.h"
+
 #include "Components/AudioComponent.h"
-#include "Player/AuraPlayerState.h"
+
 
 
 // Sets default values
