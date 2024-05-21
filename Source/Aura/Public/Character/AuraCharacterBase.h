@@ -70,11 +70,12 @@ protected:
 	virtual void IncrementMinionCount_Implementation(int32 Amount) override;
 	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	virtual FOnASCRegistered GetOnASCRegisteredDelegate() override;
-	virtual FOnDeath GetOnDeathDelegate() override;
+	virtual FOnDeathSignature& GetOnDeathDelegate()override;
+	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
 	/* End Combat Interface*/
 
 	FOnASCRegistered OnAscRegistered;
-	FOnDeath OnDeath;
+	FOnDeathSignature OnDeathSignature;
 	
 	UPROPERTY(VisibleAnywhere ,BlueprintReadOnly)
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent;
