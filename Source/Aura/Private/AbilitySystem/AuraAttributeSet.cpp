@@ -234,11 +234,15 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		}
 		else
 		{
-			FGameplayTagContainer TagContainer;
-			TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
+			if(Props.TargetCharacter->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsBeingShocked(Props.TargetCharacter))
+			{
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
 				
-			//拥有此AttributeSet的ASC 此处这样写是为了解耦,不需要知道拥有该AttributeSet的Character
-			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+				//拥有此AttributeSet的ASC 此处这样写是为了解耦,不需要知道拥有该AttributeSet的Character
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			}
+			
 
 			const FVector& KnockBackForce = UAuraAbilitySystemLibrary::GetKnockBackForce(Props.EffectContextHandle);
 			if(!KnockBackForce.IsNearlyZero(1.f))
