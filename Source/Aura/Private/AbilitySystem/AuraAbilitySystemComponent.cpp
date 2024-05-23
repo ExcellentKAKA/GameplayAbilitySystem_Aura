@@ -43,7 +43,7 @@ void UAuraAbilitySystemComponent::AddCharacterPassiveAbilities(
 		GiveAbilityAndActivateOnce(AbilitySpec);
 	}
 }
-
+//TODO:弄清AbilityInputTagPressed()的调用流程,InvokeReplicatedEvent()的使用,为什么要调这个函数(GASDoc)
 void UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
 {
 	if(!InputTag.IsValid()) return;
@@ -54,7 +54,7 @@ void UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& Inp
 		if(AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
 			AbilitySpecInputPressed(AbilitySpec);
-			if(!AbilitySpec.IsActive())
+			if(AbilitySpec.IsActive())
 			{
 				InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, AbilitySpec.Handle, AbilitySpec.ActivationInfo.GetActivationPredictionKey());
 			}
