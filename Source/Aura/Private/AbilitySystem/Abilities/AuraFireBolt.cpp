@@ -12,7 +12,7 @@ FString UAuraFireBolt::GetDescription(int32 Level)
 {
 	
 		
-	const int32 ScaledDamaged = Damage.GetValueAtLevel(Level);
+	const int32 ScaledDamage = Damage.GetValueAtLevel(Level);
 	const float ManaCost = FMath::Abs(GetManaCost(Level));
 	const float Cooldown = GetCooldown(Level);
 	if(Level == 1)
@@ -33,7 +33,7 @@ FString UAuraFireBolt::GetDescription(int32 Level)
 			//Damage
 			"<Damage>%d</><Default> fire damage with "
 			"a chance to burn</>\n\n"
-			), Level,ManaCost,Cooldown,ScaledDamaged);
+			), Level,ManaCost,Cooldown,ScaledDamage);
 	}
 	else
 	{
@@ -54,13 +54,13 @@ FString UAuraFireBolt::GetDescription(int32 Level)
 					//Damage
 					"<Damage>%d</><Default> fire damage with "
 					"a chance to burn</>\n\n"
-					), Level,ManaCost, Cooldown,FMath::Min(Level, NumProjectiles),ScaledDamaged);
+					), Level,ManaCost, Cooldown,FMath::Min(Level, NumProjectiles),ScaledDamage);
 	}
 }
 
 FString UAuraFireBolt::GetNextLevelDescription(int32 Level)
 {
-	const int32 ScaledDamaged = Damage.GetValueAtLevel(Level);
+	const int32 ScaledDamage = Damage.GetValueAtLevel(Level);
 	const float ManaCost = FMath::Abs(GetManaCost(Level));
 	const float Cooldown = GetCooldown(Level);
 	return FString::Printf(TEXT(
@@ -80,7 +80,7 @@ FString UAuraFireBolt::GetNextLevelDescription(int32 Level)
 					//Damage
 					"<Damage>%d</><Default> fire damage with "
 					"a chance to burn</>\n\n"
-					), Level,ManaCost, Cooldown,FMath::Min(Level, NumProjectiles),ScaledDamaged);
+					), Level,ManaCost, Cooldown,FMath::Min(Level, NumProjectiles),ScaledDamage);
 }
 
 void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag,
