@@ -84,6 +84,7 @@ public:
 
 	
 	FGameplayTag Abilities_Fire_FireBolt;
+	FGameplayTag Abilities_Fire_FireBlast;
 	FGameplayTag Abilities_Lightning_Electrocute;
 	FGameplayTag Abilities_Arcane_ArcaneShards;
 
@@ -112,6 +113,8 @@ public:
 	FGameplayTag Player_Block_InputHeld;
 	FGameplayTag Player_Block_InputReleased;
 	FGameplayTag Player_Block_CursorTrace;
+
+	FGameplayTag GameplayCue_FireBlast;
 private:
 	static FAuraGameplayTags GameplayTags;
 };
