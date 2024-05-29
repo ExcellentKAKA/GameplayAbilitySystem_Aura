@@ -54,6 +54,11 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 		
 	
 }
+/*
+ * OwnerActor和AvatarActor的ASC在服务端和客户端上均需初始化
+ * 服务端的初始化如上
+ * 客户端的初始化如下
+ */
 
 void AAuraCharacter::OnRep_PlayerState()
 {

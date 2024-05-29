@@ -9,13 +9,19 @@
 
 AAuraPlayerState::AAuraPlayerState()
 {
+	/*
+	 * Note: Mixed同步模式需要ASC的OwnerActor的Owner是Controller. PlayerState的Owner默认是Controller但是Character不是.
+	 * 如果OwnerActor不是PlayerState时使用Mixed同步模式, 那么需要在OwnerActor中调用SetOwner()设置Controller.
+	 * 本项目主角的ASC OwnerActor:PlayerState  AvatarActor:AuraCharacter
+	 */
 	AbilitySystemComponent = CreateDefaultSubobject<UAuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
 
-	
+	//Note: 如果ASC位于PlayerState, 那么你需要提高PlayerState的NetUpdateFrequency,
+	//其默认是一个很低的值, 因此在客户端上发生Attribute和GameplayTag改变时会造成延迟或卡顿.
 	NetUpdateFrequency = 100.f;
 
 	
